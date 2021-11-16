@@ -1,0 +1,213 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct node{
+	int data;
+	struct node *link;
+};
+struct node *head = NULL,*curr,*temp,*temp1,*t;
+struct node *create(){
+	int n;
+	printf("Enter no. of elements: ");
+	scanf("%d",&n);
+	printf("Enter elements: ");
+	while(n--){
+		curr = (struct node *)malloc(sizeof(struct node));
+		scanf("%d",&(curr->data));
+		curr -> link = NULL;
+		if(head==NULL){
+			head=curr;
+		}
+		else{
+			temp = head;
+			while(temp->link!=NULL){
+				temp = temp->link;
+				temp->link = curr;
+			}
+		}
+	}
+	printf("\nNodes Created\n");
+	return head;
+}
+struct node *insert_begin(int ele){
+	curr = (struct node *)malloc(sizeof(struct node));
+	curr->data = ele;
+	curr->link = head;
+	head = curr;
+	return head;
+}
+struct node *insert_pos(int pos,int ele){
+	int c = 1;
+	curr = (struct node *)malloc(sizeof(struct node));
+	curr->data = ele;
+	temp = head;
+	while(c<pos-1){
+		temp = temp->link;
+		c++;
+	}
+	curr->link = temp->link;
+	temp->link = curr;
+	return head;
+}
+struct node *insert_end(int ele){
+	curr = (struct node *)malloc(sizeof(struct node));
+	curr->data = ele;
+	curr->link = NULL;
+	temp = head;
+	while(temp->link!=NULL){
+		temp = temp->link;
+	}
+	temp->link = curr;
+	return head;
+}
+struct node *delete_begin(struct node *head){
+	temp = head;
+	head = temp->link;
+	printf("Deleted Element: %d\n",temp->data);
+	free(temp);
+	return head;
+}
+struct node *delete_pos(struct node *head,int pos){
+	temp = head;
+	int c = 1;
+	while(c<pos){
+		temp1 = temp;
+		temp = temp->link;
+		c++;
+	}
+	temp1->link = temp->link;
+	printf("Deleted Element: %d\n",temp->data);
+	free(temp);
+	return head;
+}
+struct node *delete_end(struct node *head){
+	temp = head;
+	while(temp->link!=NULL){
+		temp1 = temp;
+		temp = temp->link;
+	}
+	temp1->link = NULL;
+	printf("Deleted Element: %d\n",temp->data);
+	free(temp);
+	return head;
+}
+void display(struct node *head){
+	temp = head;
+	while(temp!=NULL){
+		printf("%d -> ",temp->data);
+		temp=temp->link;
+	}
+}
+void reverse_display(struct node *head){
+	if(head!=NULL){
+		reverse_display(head->link);
+		printf("%d -> ",head->data);
+	}
+}
+int search(struct node *head,int key){
+	int c = 1;
+	temp = head;
+	while(temp!=NULL){
+		if(key==temp->data){
+			return c;
+		}
+		temp = temp->link;
+		c++;
+	}
+	return -1;
+}
+void sorting(struct node *head){
+	int x,i,s;
+	temp = head;
+	t = NULL;
+	do{
+		s = 0;
+		temp = head;
+		while(temp->link!=t){
+			if((temp->data) > (temp->link->data)){
+                        x = temp->data;
+                        temp->data=temp->link->data;
+                        temp->link->data=x;
+			s = 1;
+			}
+			temp = temp->link;
+		}
+		t = temp;
+	}while(s);
+	/*while(temp!=NULL){
+		temp = head;
+		if((temp->data) > (temp->link->data)){
+			x = temp->data;
+			temp->data=temp->link->data;
+			temp->link->data=x;
+		}
+		temp=temp->link;
+	}*/
+	display(head);
+}
+int main(){
+	int ch,ele,pos,c,key;
+	while(1){
+		printf("\n1 - Create\n2 - Insert at Beginning\n3 - Insert at Position\n4 - Insert at End\n5 - Delete at Beginning\n6 - Delete at position\n7 - Delete at End\n8 - Display\n9 - Reverse Display\n10 - Search\n11 - Sort\n12 - Exit\n");
+		printf("Enter your choice: ");
+		scanf("%d",&ch);
+		switch(ch){
+			case 1: head = create();
+				display(head);
+				printf("\n");
+				break;
+			case 2: printf("Enter element to be added: ");
+			        scanf("%d",&ele);
+				head = insert_begin(ele);
+				display(head);
+				printf("\n");
+				break;
+			case 3: printf("Enter element to be added: ");
+                                scanf("%d",&ele);
+				printf("Enter position: ");
+				scanf("%d",&pos);
+                                head = insert_pos(pos,ele);
+				display(head);
+				printf("\n");
+                                break;
+			case 4: printf("Enter element to be added: ");
+                                scanf("%d",&ele);
+                                head = insert_end(ele);
+				display(head);
+				printf("\n");
+                                break;
+			case 5: head = delete_begin(head);
+				display(head);
+				printf("\n");
+				break;
+			case 6: printf("Enter position: ");
+				scanf("%d",&pos);
+				head = delete_pos(head,pos);
+				display(head);
+				printf("\n");
+				break;
+			case 7: head = delete_end(head);
+				display(head);
+				printf("\n");
+				break;
+			case 8: display(head);
+				printf("\n");
+				break;
+			case 9: reverse_display(head);
+				printf("\n");
+				break;
+			case 10: printf("Enter key to be searched: ");
+				 scanf("%d",&key);
+				 pos = search(head,key);
+				 printf("Position of %d : %d",key,pos);
+				 printf("\n");
+				 break;
+			case 11: printf("Elements sorted!\n");
+				 sorting(head);
+				 printf("\n");
+				 break;
+			case 12: exit(0);
+				 break;
+		}
+	}
+}
+
